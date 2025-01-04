@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>文本转语音</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>文本转语音工具</h1>
+        <div class="form-group">
+            <textarea id="text" placeholder="请输入要转换的文本..."></textarea>
+        </div>
+        <div class="form-group">
+            <select id="voice">
+                {% for voice in voices %}
+                <option value="{{ voice['Name'] }}">{{ voice['ShortName'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button onclick="convertToSpeech()">转换</button>
+        <div id="audio-container" style="display: none;">
+            <audio id="audio-player" controls>
+                <source src="" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+
+    <script>
+        async function convertToSpeech() {
+            const text = document.getElementById('text').value;
+            const voice = document.getElementById('voice').value;
+            
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `text=${encodeURIComponent(text)}&voice=${encodeURIComponent(voice)}`
+            });
+            
+            const data = await response.json();
+            if (data.status === 'success') {
+                const audioContainer = document.getElementById('audio-container');
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = data.audio_path + '?t=' + new Date().getTime();
+                audioContainer.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,2 +1,4 @@
-static/*
-*.mp3
+.env
+static/*.mp3
+__pycache__/
+*.pyc

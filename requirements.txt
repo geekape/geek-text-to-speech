@@ -1,3 +1,4 @@
 flask
 edge-tts
-python-dotenv 
+oss2
+python-dotenv
